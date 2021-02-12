@@ -36,12 +36,24 @@ int main()
     }
 
     print_part(m, 1, 8);
+    std::cout << std::endl;
 
     std::cout << m.size() << std::endl;
+    std::cout << std::endl;
 
-    // Вывести все занятые ячейки вместе со своими позициями.
+    for (const auto & e : m) {
+        std::cout << "[ ";
+        int j = 0;
+        for (auto i : e.first) {
+            std::cout << i;
+            if (j++ < e.first.size() - 1) {
+                std::cout << ", ";
+            }
+        }
+        std::cout << " ]: ";
 
-    //2 Вывод всех ячеек через range for loop.Паттерн Iterator.
+        std::cout << e.second << std::endl;
+    }
 
     return 0;
 }

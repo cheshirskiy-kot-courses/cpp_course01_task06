@@ -123,4 +123,7 @@ public:
             std::make_index_sequence<M>{},
             static_cast<std::size_t>(index));
     }
+
+    auto begin() const { return _mat->begin(); }
+    auto end() const { return _mat->end(); }
 };
