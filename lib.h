@@ -2,6 +2,7 @@
 #include <map>
 #include <array>
 #include <iostream>
+#include <memory>
 
 
 template<class T, T def, std::size_t N>
