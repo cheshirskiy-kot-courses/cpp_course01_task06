@@ -1,0 +1,19 @@
+dist: focal
+language: cpp
+compiler: clang
+addons:
+  apt:
+    packages:
+    - libboost-test-dev
+script:
+- cmake .
+- cmake --build .
+- cmake --build . --target test
+- cmake --build . --target package
+deploy:
+  provider: script
+  skip_cleanup: true
+  on:
+      branch: main
+  script:
+  - curl -T task06-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb -ucheshirskiy-kot-courses:$BINTRAY_API_KEY "https://api.bintray.com/content/cheshirskiy-kot-courses/cpp_course01/homework/$TRAVIS_BUILD_NUMBER/task06-0.0.$TRAVIS_BUILD_NUMBER-Linux.deb;deb_distribution=focal;deb_component=main;deb_architecture=amd64;publish=1"
