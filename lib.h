@@ -50,18 +50,17 @@ public:
     using KeyType = std::array<std::size_t, N>;
     using ElementType = MatrixElement<T, def, N>;
     using MapType = std::map<KeyType, T>;
+    template<std::size_t S>
+    using Array = std::array<std::size_t, S>;
 
 private:
     std::shared_ptr<MapType> _mat;
-    std::array<std::size_t, M> _indices;
+    Array<M> _indices;
 
     template<std::size_t ...I, class ...Args>
     auto generate_key(std::index_sequence<I...>, Args... args)
     {
-        return std::array<
-            std::size_t,
-            sizeof...(args) + sizeof...(I)
-        >{
+        return Array<sizeof...(args) + sizeof...(I)>{
             _indices[I]...,
             static_cast<std::size_t>(args)...
         };
@@ -93,10 +92,22 @@ public:
 
     T def_value() const { return def; }
 
-    std::size_t size() const
+    auto size() const
     {
-        //TODO
-        return _mat->size();
+        if constexpr (M == 0) {
+            return _mat->size();
+        }
+        else {
+            Array<N> l, u;
+            for (int i = 0; i < M; i++) {
+                l[i] = u[i] = _indices[i];
+            }
+            for (int i = M; i < N; i++) {
+                l[i] = 0;
+                u[i] = std::numeric_limits<size_t>::max();
+            }
+            return std::distance(_mat->lower_bound(l), _mat->upper_bound(u));
+        }
     }
 
     template<class ...Args>

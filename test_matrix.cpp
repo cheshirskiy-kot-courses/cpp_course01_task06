@@ -53,4 +53,14 @@ BOOST_AUTO_TEST_CASE(test_subscript_operator)
     BOOST_TEST(matrix.size() == 1);
 }
 
+BOOST_AUTO_TEST_CASE(test_size_calculation)
+{
+    Matrix<int, -1, 3> matrix;
+    matrix[100][100][10] = 314;
+    matrix[10][100][10] = 1;
+
+    BOOST_TEST(matrix.size() == 2);
+    BOOST_TEST(matrix[10].size() == 1);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
