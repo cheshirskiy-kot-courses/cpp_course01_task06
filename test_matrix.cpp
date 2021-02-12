@@ -44,4 +44,13 @@ BOOST_AUTO_TEST_CASE(test_out_of_range_exception)
     }
 }
 
+BOOST_AUTO_TEST_CASE(test_subscript_operator)
+{
+    Matrix<int, -1, 3> matrix;
+    matrix[100][100][10] = 314;
+
+    BOOST_TEST(matrix[100][100][10] == 314);
+    BOOST_TEST(matrix.size() == 1);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
