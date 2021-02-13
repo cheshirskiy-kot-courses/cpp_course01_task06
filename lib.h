@@ -32,8 +32,7 @@ public:
     T operator=(const T & value)
     {
         if (value == def) {
-            auto itr = _mat->find(_key);
-            if (itr != _mat->end()) _mat->erase(itr);
+            _mat->erase(_key);
         }
         else {
             _mat->operator[](_key) = value;
@@ -80,6 +79,14 @@ private:
         }
     }
 
+    template<class Index>
+    auto check_index(Index index)
+    {
+        return [index]() {
+            if (index < 0) throw std::out_of_range("Matrix: invalid index");
+        }();
+    }
+
 public:
     Matrix() :
         _mat{ new MapType }
@@ -115,11 +122,7 @@ public:
     ElementType operator() (Args... args)
     {
         static_assert(sizeof...(args) == N - M, "Matrix: wrong size");
-        int dummy[sizeof...(Args)] = {(
-            [](auto arg) {
-                if (arg < 0) throw std::out_of_range("Matrix: invalid index");
-            }(args),
-            0)...};
+        int dummy[sizeof...(Args)] = {(check_index(args), 0)...};
 
         auto key = generate_key(
             std::make_index_sequence<M>{},
@@ -130,7 +133,7 @@ public:
 
     auto operator[](int index)
     {
-        if (index < 0) throw std::out_of_range("Matrix: invalid index");
+        check_index(index);
         return generate_proxy(
             std::make_index_sequence<M>{},
             static_cast<std::size_t>(index));
